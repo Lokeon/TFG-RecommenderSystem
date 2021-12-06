@@ -24,11 +24,10 @@ def get_rates():
 
 
 def groupByUsers_sorted(rates_df, user_rec, new_rates_df):
-    # print(user_rec)
     # all games from other users that are the same as the recmed user
     user_dt = new_rates_df[new_rates_df["idGame"].isin(
         user_rec["idGame"].tolist())]
-    # print(user_dt)
+
     user_dt_subgroup = user_dt.groupby(["idUser"])
     user_dt_subgroup = sorted(
         user_dt_subgroup, key=lambda x: len(x[1]), reverse=True)
@@ -62,10 +61,6 @@ def pearson_correlation_df(users_list, user_rate):
             group["idGame"].tolist())]
         temp_list = temp_df["score"].tolist()
         temp_group_list = group["score"].tolist()
-        # print("------")
-        # print(temp_list)
-        # print("------")
-        # print(temp_group_list)
 
         userA = sum([i**2 for i in temp_list]) - \
             pow(sum(temp_list), 2)/float(nRates)
@@ -100,9 +95,7 @@ def game_recommendation(pearson_df, rates_df, id):
     tempSumRatings = topUsersRated.groupby(
         "nameGame").sum()[["simIndex", "weighRated"]]
 
-    # print(tempSumRatings)
     tempSumRatings.columns = ["sumSimIndex", "sumWeighRated"]
-    # print(topUsersRated)
 
     recommendation_df = pd.DataFrame()
 
@@ -171,8 +164,3 @@ if __name__ == "__main__":
     recommendation_df_filtered = filter_games_played(
         recommendation_df, user_rec_list)
     post_recommendation(recommendation_df_filtered, id)
-
-    # print("------")
-    # print(recommendation_df_filtered.head(10))
-    # print("------")
-    # print(user_rec_list.head(10))
